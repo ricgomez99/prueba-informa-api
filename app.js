@@ -14,7 +14,7 @@ export const createApp = ({ tasksModel }) => {
   app.get('/', (req, res) => {
     const { name } = req.query
     name
-      ? res.json({ message: `Hello, ${name}!` })
+      ? res.json({ message: `Hello, ${name} and welcome!` })
       : res.json({ message: `Hello, World!` })
   })
 
