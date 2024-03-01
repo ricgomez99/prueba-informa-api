@@ -3,7 +3,7 @@ import Task from './db/Schemas/task.js'
 
 createConnection()
   .then(console.log('Connected to tasksDB'))
-  .catch((error) => console.log(error))
+  .catch((error) => console.log(`error: ${error}`))
 
 export class TasksModel {
   static async getTasks() {
