@@ -12,6 +12,10 @@ const taskSchema = new Schema({
     type: String,
     default: currentDate,
   },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  },
 })
 
 const Task = models.Task ?? model('Task', taskSchema)

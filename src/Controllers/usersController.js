@@ -1,0 +1,32 @@
+export class UsersController {
+  constructor({ usersModel }) {
+    this.usersModel = usersModel
+  }
+
+  getAll = async (req, res) => {
+    const users = await this.usersModel.getUsers()
+    res.status(200).json(users)
+  }
+
+  getById = async (req, res) => {
+    const { id } = req.params
+    const user = await this.usersModel.getUserById({ id })
+
+    if (user) {
+      return res.status(200).json(user)
+    }
+
+    return res.status(400).json({ message: 'User not found' })
+  }
+
+  createUser = async (req, res) => {
+    const input = req.body
+    const result = await this.usersModel.createUser({ input })
+
+    if (result) {
+      return res.status(201).json({ message: 'User created', user: result })
+    }
+
+    return res.status(400).json({ message: 'Unable to create user' })
+  }
+}

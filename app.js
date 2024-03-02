@@ -2,8 +2,9 @@ import express, { json } from 'express'
 import 'dotenv/config'
 import { corsMiddleware } from './src/Middlewares/cors.js'
 import { createTaskRouter } from './src/Routes/tasks.js'
+import { createUserRouter } from './src/Routes/users.js'
 
-export const createApp = ({ tasksModel }) => {
+export const createApp = ({ tasksModel, usersModel }) => {
   const app = express()
   const PORT = process.env.PORT ?? '3000'
 
@@ -19,6 +20,7 @@ export const createApp = ({ tasksModel }) => {
   })
 
   app.use('/tasks', createTaskRouter({ tasksModel }))
+  app.use('/users', createUserRouter({ usersModel }))
 
   app.listen(PORT, () => {
     console.log(`app listening on port: http://localhost:${PORT}`)
