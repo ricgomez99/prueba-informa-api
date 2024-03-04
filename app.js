@@ -3,6 +3,7 @@ import 'dotenv/config'
 import { corsMiddleware } from './src/Middlewares/cors.js'
 import { createTaskRouter } from './src/Routes/tasks.js'
 import { createUserRouter } from './src/Routes/users.js'
+import { createLoginRouter } from './src/Routes/login.js'
 
 export const createApp = ({ tasksModel, usersModel }) => {
   const app = express()
@@ -21,6 +22,7 @@ export const createApp = ({ tasksModel, usersModel }) => {
 
   app.use('/tasks', createTaskRouter({ tasksModel }))
   app.use('/users', createUserRouter({ usersModel }))
+  app.use('/auth/login', createLoginRouter({ usersModel }))
 
   app.listen(PORT, () => {
     console.log(`app listening on port: http://localhost:${PORT}`)

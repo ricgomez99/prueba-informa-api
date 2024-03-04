@@ -8,6 +8,7 @@ export const createUserRouter = ({ usersModel }) => {
   usersRouter.get('/', usersController.getAll)
   usersRouter.get('/:id', usersController.getById)
   usersRouter.post('/', usersController.createUser)
+  usersRouter.post('/:id', usersController.deleteUser)
 
   return usersRouter
 }
