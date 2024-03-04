@@ -10,7 +10,7 @@ createConnection()
 export class UsersModel {
   static async getUsers() {
     try {
-      const users = await User.find()
+      const users = await User.find().populate('tasks')
       if (!users) return []
 
       return users

@@ -1,5 +1,8 @@
 import { createConnection } from './db/connection.js'
-import Task from './db/Schemas/task.js'
+import Task from './db/Schemas/Task.js'
+import jwt from 'jsonwebtoken'
+import 'dotenv/config.js'
+import User from './db/Schemas/user.js'
 
 createConnection()
   .then(console.log('Connected to tasksDB'))
@@ -8,7 +11,7 @@ createConnection()
 export class TasksModel {
   static async getTasks() {
     try {
-      const tasks = await Task.find({})
+      const tasks = await Task.find({}).populate('user')
 
       if (!tasks) {
         return []
@@ -21,7 +24,7 @@ export class TasksModel {
 
   static async getTaskById({ id }) {
     try {
-      const task = await Task.findById(id)
+      const task = await Task.findById(id).populate('user')
       if (!id || !task) return null
       return task
     } catch (error) {
@@ -29,10 +32,26 @@ export class TasksModel {
     }
   }
 
-  static async createTask({ input }) {
+  static async createTask({ input, token }) {
     try {
-      const newTask = await Task.create(input)
-      return newTask
+      const { title, creationDate } = input
+      const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN)
+      const userId = decodedToken.userId
+
+      const newTask = new Task({
+        title: title,
+        creationDate: creationDate,
+        user: userId,
+      })
+
+      const result = await Task.create(newTask)
+      if (result) {
+        await User.findByIdAndUpdate(
+          { _id: userId },
+          { $push: { tasks: result._id } }
+        )
+      }
+      return result
     } catch (error) {
       throw new Error(`Unable to create the task, error: ${error}`)
     }

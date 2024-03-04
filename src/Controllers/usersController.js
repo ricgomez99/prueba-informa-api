@@ -1,3 +1,5 @@
+import { jwtAuth } from '../Utils/jwtAuth.js'
+
 export class UsersController {
   constructor({ usersModel }) {
     this.usersModel = usersModel
@@ -45,10 +47,14 @@ export class UsersController {
     const input = req.body
     const loginOutput = await this.usersModel.login({ input })
 
-    if (!loginOutput) {
-      return res.status(500).json({ message: 'User not allowed to login' })
+    if (loginOutput) {
+      const loggedUser = jwtAuth({ user: loginOutput })
+      return res.status(200).json({
+        message: 'User logged-in successfully',
+        access_code: loggedUser,
+      })
     }
 
-    return res.status(200).json({ message: 'User logged-in successfully' })
+    return res.status(500).json({ message: 'User not allowed to login' })
   }
 }

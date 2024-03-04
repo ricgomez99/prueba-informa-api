@@ -22,7 +22,8 @@ export class TasksController {
       res.status(400).json({ message: 'Unable to create task' })
     }
 
-    const newTask = await this.tasksModel.createTask({ input: req.body })
+    const token = req.headers.authorization.split(' ')[1]
+    const newTask = await this.tasksModel.createTask({ input: req.body, token })
     res.status(201).json(newTask)
   }
 
