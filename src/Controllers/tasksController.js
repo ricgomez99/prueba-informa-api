@@ -4,7 +4,8 @@ export class TasksController {
   }
 
   getAll = async (req, res) => {
-    const tasks = await this.tasksModel.getTasks()
+    const { userId } = req
+    const tasks = await this.tasksModel.getTasks(userId)
     res.json(tasks)
   }
 
@@ -22,7 +23,11 @@ export class TasksController {
       res.status(400).json({ message: 'Unable to create task' })
     }
 
-    const newTask = await this.tasksModel.createTask({ input: req.body })
+    const { userId } = req
+    const newTask = await this.tasksModel.createTask({
+      input: req.body,
+      userId,
+    })
     res.status(201).json(newTask)
   }
 

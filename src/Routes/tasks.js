@@ -1,15 +1,16 @@
 import { Router } from 'express'
 import { TasksController } from '../Controllers/tasksController.js'
+import { authenticateToken } from '../Middlewares/authenticateToken.js'
 
 export const createTaskRouter = ({ tasksModel }) => {
   const tasksRouter = Router()
   const tasksController = new TasksController({ tasksModel })
 
-  tasksRouter.get('/', tasksController.getAll)
-  tasksRouter.get('/:id', tasksController.getById)
-  tasksRouter.post('/', tasksController.createTask)
-  tasksRouter.delete('/:id', tasksController.deleteTask)
-  tasksRouter.patch('/:id', tasksController.updateTask)
+  tasksRouter.get('/', authenticateToken, tasksController.getAll)
+  tasksRouter.get('/:id', authenticateToken, tasksController.getById)
+  tasksRouter.post('/', authenticateToken, tasksController.createTask)
+  tasksRouter.delete('/:id', authenticateToken, tasksController.deleteTask)
+  tasksRouter.patch('/:id', authenticateToken, tasksController.updateTask)
 
   return tasksRouter
 }

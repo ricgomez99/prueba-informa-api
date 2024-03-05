@@ -1,14 +1,17 @@
 import { createConnection } from './db/connection.js'
-import Task from './db/Schemas/task.js'
+import Task from './db/Schemas/Task.js'
+import 'dotenv/config.js'
+import User from './db/Schemas/user.js'
+import { authenticateToken } from '../../Middlewares/authenticateToken.js'
 
 createConnection()
   .then(console.log('Connected to tasksDB'))
   .catch((error) => console.log(`error: ${error}`))
 
 export class TasksModel {
-  static async getTasks() {
+  static async getTasks(userId) {
     try {
-      const tasks = await Task.find({})
+      const tasks = await Task.find({ user: userId })
 
       if (!tasks) {
         return []
@@ -29,10 +32,24 @@ export class TasksModel {
     }
   }
 
-  static async createTask({ input }) {
+  static async createTask({ input, userId }) {
     try {
-      const newTask = await Task.create(input)
-      return newTask
+      const { title, creationDate } = input
+
+      const newTask = new Task({
+        title: title,
+        creationDate: creationDate,
+        user: userId,
+      })
+
+      const result = await Task.create(newTask)
+      if (result) {
+        await User.findByIdAndUpdate(
+          { _id: userId },
+          { $push: { tasks: result._id } }
+        )
+      }
+      return result
     } catch (error) {
       throw new Error(`Unable to create the task, error: ${error}`)
     }
