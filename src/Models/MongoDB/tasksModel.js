@@ -1,17 +1,17 @@
 import { createConnection } from './db/connection.js'
 import Task from './db/Schemas/Task.js'
-import jwt from 'jsonwebtoken'
 import 'dotenv/config.js'
 import User from './db/Schemas/user.js'
+import { authenticateToken } from '../../Middlewares/authenticateToken.js'
 
 createConnection()
   .then(console.log('Connected to tasksDB'))
   .catch((error) => console.log(`error: ${error}`))
 
 export class TasksModel {
-  static async getTasks() {
+  static async getTasks(userId) {
     try {
-      const tasks = await Task.find({}).populate('user')
+      const tasks = await Task.find({ user: userId })
 
       if (!tasks) {
         return []
@@ -24,7 +24,7 @@ export class TasksModel {
 
   static async getTaskById({ id }) {
     try {
-      const task = await Task.findById(id).populate('user')
+      const task = await Task.findById(id)
       if (!id || !task) return null
       return task
     } catch (error) {
@@ -32,11 +32,9 @@ export class TasksModel {
     }
   }
 
-  static async createTask({ input, token }) {
+  static async createTask({ input, userId }) {
     try {
       const { title, creationDate } = input
-      const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN)
-      const userId = decodedToken.userId
 
       const newTask = new Task({
         title: title,

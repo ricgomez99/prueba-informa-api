@@ -1,16 +1,23 @@
 import jwt from 'jsonwebtoken'
 import 'dotenv/config'
+import User from '../Models/MongoDB/db/Schemas/user.js'
 
-export const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization']
-  const token = authHeader && authHeader.split(' ')[1]
+export const authenticateToken = async (req, res, next) => {
+  try {
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
 
-  if (token == null) return res.status(400)
+    if (token == null) return res.status(400)
 
-  jwt.verify(token, process.env.ACCESS_TOKEN, (err, user) => {
-    if (err) return res.status(403).json({ message: err })
+    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN)
+    const userId = decodedToken.userId
+    const user = await User.findById(userId)
 
-    req.user = user
+    if (!user) throw new Error('User not found')
+
+    req.userId = userId
     next()
-  })
+  } catch (error) {
+    return res.status(401).json({ message: 'Authentication failed' })
+  }
 }
