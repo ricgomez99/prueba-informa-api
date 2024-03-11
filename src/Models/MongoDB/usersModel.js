@@ -1,7 +1,6 @@
 import { createConnection } from './db/connection.js'
 import User from './db/Schemas/user.js'
 import { saltGenerator } from '../../Utils/saltGenerator.js'
-import { comparePassword } from '../../Utils/comparePassword.js'
 
 createConnection()
   .then(console.log('Connected to tasksDB'))
@@ -58,25 +57,6 @@ export class UsersModel {
       return result
     } catch (error) {
       throw new Error(`Unable to delete user, error: ${error}`)
-    }
-  }
-
-  static async login({ input }) {
-    try {
-      const user = await User.findOne({ username: input.username })
-      const passwordMatch = await comparePassword(input.password, user.password)
-
-      if (!user) {
-        return null
-      }
-
-      if (passwordMatch) {
-        return user
-      } else {
-        return null
-      }
-    } catch (error) {
-      throw new Error(`User not allowed to login, error: ${error}`)
     }
   }
 }

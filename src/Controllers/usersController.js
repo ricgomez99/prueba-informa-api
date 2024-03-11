@@ -1,5 +1,3 @@
-import { jwtAuth } from '../Utils/jwtAuth.js'
-
 export class UsersController {
   constructor({ usersModel }) {
     this.usersModel = usersModel
@@ -41,20 +39,5 @@ export class UsersController {
     }
 
     return res.status(400).json({ message: 'Unable to delete user' })
-  }
-
-  login = async (req, res) => {
-    const input = req.body
-    const loginOutput = await this.usersModel.login({ input })
-
-    if (loginOutput) {
-      const loggedUser = jwtAuth({ user: loginOutput })
-      return res.status(200).json({
-        message: 'User logged-in successfully',
-        access_code: loggedUser,
-      })
-    }
-
-    return res.status(500).json({ message: 'User not allowed to login' })
   }
 }

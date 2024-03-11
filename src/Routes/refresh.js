@@ -1,11 +1,11 @@
 import { Router } from 'express'
 import { LoginController } from '../Controllers/loginController.js'
 
-export const createLoginRouter = ({ loginModel }) => {
+export const createRefreshRouter = ({ loginModel }) => {
   const loginController = new LoginController({ loginModel })
-  const loginRouter = Router()
+  const refreshRouter = Router()
 
-  loginRouter.post('/', loginController.login)
+  refreshRouter.post('/', loginController.refresh)
 
-  return loginRouter
+  return refreshRouter
 }
