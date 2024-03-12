@@ -32,7 +32,11 @@ export class LoginModel {
   static async refresh(refreshToken) {
     try {
       if (!refreshToken) return null
-      const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN)
+
+      const registeredToken = await Token.findOne({ refresh: refreshToken })
+      const { refresh } = registeredToken
+
+      const decoded = jwt.verify(refresh, process.env.REFRESH_TOKEN)
       const userId = decoded.userId
 
       return userId

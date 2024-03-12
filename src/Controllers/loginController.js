@@ -35,14 +35,14 @@ export class LoginController {
       const userId = await this.loginModel.refresh(refreshToken)
 
       if (!userId) {
-        return res.status(401).json({ message: 'No token returned' })
+        return res.status(401).json({ message: 'No refresh token' })
       }
 
       jwt.verify(refreshToken, process.env.REFRESH_TOKEN, (err, user) => {
         if (err)
           return res.status(403).json({ message: 'Invalid refresh token' })
 
-        const accessToken = tokenGenerator({ userId })
+        const accessToken = tokenGenerator({ userId: userId })
         res.json({ accessToken: accessToken })
       })
     } catch (error) {
