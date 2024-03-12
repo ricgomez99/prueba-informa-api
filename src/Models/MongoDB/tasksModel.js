@@ -1,8 +1,7 @@
 import { createConnection } from './db/connection.js'
-import Task from './db/Schemas/Task.js'
+import Task from './db/Schemas/task.js'
 import 'dotenv/config.js'
 import User from './db/Schemas/user.js'
-import { authenticateToken } from '../../Middlewares/authenticateToken.js'
 
 createConnection()
   .then(console.log('Connected to tasksDB'))
