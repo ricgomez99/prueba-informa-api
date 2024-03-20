@@ -13,14 +13,10 @@ const ACCEPT_ORIGIN = [
 export const corsMiddleware = ({ acceptOrigin = ACCEPT_ORIGIN } = {}) =>
   cors({
     origin: (origin, callback) => {
-      if (acceptOrigin.includes(origin)) {
+      if (acceptOrigin.indexOf(origin) !== -1 || !origin) {
         return callback(null, true)
+      } else {
+        return callback(new Error('Not allowed by CORS'))
       }
-
-      if (!origin) {
-        return callback(null, true)
-      }
-
-      return callback(new Error('Not allowed by CORS'))
     },
   })
