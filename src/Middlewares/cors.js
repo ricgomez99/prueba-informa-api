@@ -1,6 +1,7 @@
 import cors from 'cors'
 
 const ACCEPT_ORIGIN = [
+  '*',
   'http://localhost:3000',
   'http://localhost:5173',
   'http://localhost:5173/auth/login',
