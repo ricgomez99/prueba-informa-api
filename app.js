@@ -19,6 +19,7 @@ export const createApp = ({
   app.disable('x-powered-by')
   app.use(json())
   app.use(corsMiddleware())
+  app.options('*', corsMiddleware())
 
   app.get('/', (req, res) => {
     const { name } = req.query
