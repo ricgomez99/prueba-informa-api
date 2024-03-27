@@ -11,6 +11,7 @@ const ACCEPT_ORIGIN = [
   'https://prueba-informa-api-production.up.railway.app',
   'https://prueba-informa-api-production.up.railway.app/auth/login',
   'https://prueba-informa-api-production.up.railway.app/tasks',
+  'https://prueba-informa-api-production.up.railway.app/token',
 ]
 
 export const corsMiddleware = ({ acceptOrigin = ACCEPT_ORIGIN } = {}) =>
